@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>GUN</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -499,7 +498,7 @@ ref.on(function(data){
 
 
 	<div class="step hide step3">
-
+		<style>.step3 a { color: skyblue; }</style>
 		<div class="full grid">
 			<style>
 				.browser {
@@ -569,8 +568,8 @@ ref.on(function(data){
 			</div>
 			<div class="middle unit teft" style="min-width: 20em; max-width: 30em; margin-bottom: 1em;">
 				<button type="submit" class="left" style="margin-right: 1em;"><big>Update!</big></button>
-				Let's update the "hello" field with a different value.
-				We can path into any field, and update it directly.
+				<span class="instruct">Let's update the "hello" field with a different value.
+				We can path into any field, and update it directly.</span>
 			</div>
 		</div>
 		</form>
@@ -584,14 +583,14 @@ ref.on(function(data){
 				$("pre").each(function(){
 					hljs.highlightBlock(this);
 				})
-			}
+			}, tut = {};
 			$(".your-key").text(key);
 			hili();
 
 			location.hash = 'step1';
 			$(window).on('hashchange', function(){
 				$('.step').removeClass('show').addClass('hide')
-			  $(location.hash.replace('#','.')).addClass('show');
+				$(location.hash.replace('#','.')).addClass('show');
 			});
 
 			$(".step1").find('button').on('click', function(e){
@@ -606,6 +605,10 @@ ref.on(function(data){
 				var val = $("#try-sync").val() || null;
 				var path = $("#try-path").val();
 				gun.get(key).path(path).put(val);
+				if(!tut.sync){
+					$(this).find('.instruct').html("Great job! That is it, <a href='http://gun.js.org/web/think.html'>click here</a> if you want a more advanced tutorial. Thanks for trying GUN!");
+				}
+				tut.sync = (tut.sync || 0) + 1;
 			});
 		})
 	</script>
