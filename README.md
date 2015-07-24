@@ -5,7 +5,7 @@ GUN is a realtime, decentralized, embedded, graph database engine.
 
 ## Getting Started
 
-For the browser, try out this [tutorial](https://dl.dropboxusercontent.com/u/4374976/gun/web/think.html). This README is for GUN servers.
+For the browser, try out this [tutorial](http://gun.js.org/web/think.html). This README is for GUN servers.
 
 If you do not have [node](http://nodejs.org/) or [npm](https://www.npmjs.com/), read [this](https://github.com/amark/gun/blob/master/examples/install.sh) first.
 Then in your terminal, run:
@@ -33,7 +33,7 @@ var gun = Gun({
 });
 ```
 
-These are the default persistence layers, they are modular and can be replaced others.
+These are the default persistence layers, they are modular and can be replaced by others.
 
 Using S3 is recommended for deployment, and using a file is recommended for local development.
 
@@ -58,7 +58,7 @@ Version 0.2.0 is currently in alpha.  Important changes include `.get` to `.val`
 GUN is not stable, and therefore should not be trusted in a production environment.
 ***
 
-## API
+## [API](https://github.com/amark/gun/wiki/JS-API)
 
 Below is a really basic overview of how the gun API works. For a more detailed explanation with many more examples, [check out the wiki](https://github.com/amark/gun/wiki).
 
