@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<h1>Distributed Testing</h1>
+		<p>
+		The purpose of this test is to simulate load.
+		We want to make this as easy as possible, but there are various limitations.
+		This page will explain how to do more thorough tests and gives you options to configure them.
+		</p>
+		<p>
+		First off, we will programmatically open <input id="tabs" type="number" value="5"> number of tabs with a <input id="stage" type="number" value="5"> millisecond delay between each.
+		</p>
+		<p>
+		These tabs will then connect to the local gun server, running on <input id="port" type="number" value="8080" disabled="true">.
+		</p>
+		<p>
+		They will start to spam the system with <input id="each" type="number" value="999"> messages each, at a <input id="interval" type="number" value="20"> millisecond interval.
+		<i>Note: The server's file.js persistence module is not very reliable and should not be used for anything other than local development.</i>
+		</p>
+		<p>
+		Each message will have the peer ID in it, a message ID, and a random string of <input id="length" type="number" value="140"> characters.
+		</p>
+		<p>
+		You'll probably want to <button onclick="localStorage.clear()">clear localStorage</button> before <button id="start">starting the test</button>. Make sure your server is on, that popups are allowed, and that you are in a fresh window. <button id="close">Close all other tabs</button>.
+		</p>
+		<div id="stats">
+			Status: <span id="test-status">Not Started.</span>
+			<div>
+				<h3>Peers:</h3>
+				<ul id="peers">
+				
+				</ul>
+			</div>
+		</div>
+		<div class="model" style="display: none;">
+			<li class="peer">
+				<span class="id">peer ID</span> is <span class="status">null</span>.
+			</li>
+		</div>
+		<p>
+		Future versions of this test will want to include:
+			<ul>
+				<li>Automatically calculate results.</li>
+				<li>Ability to cause random chaos, like network hiccups.</li>
+				<li>Collaboratively run across multiple browsers and devices.</li>
+				<li>Do complex tasks on different data structures.</li>
+				<li>Multi-peer connections.</li>
+				<li>Jepsen level awesomeness.</li>
+			</ul>
+			Any help on building this out would be appreciated!
+		</p>
+		<style>
+			input { width: 4em; padding: 0; }
+		</style>
+		<script src="http://localhost:8080/gun.js"></script>
+		<script>
+			if(!window.Gun){ alert("Server not on!") }
+			//Gun.log.verbose = true;
+			var test = {closepeers: {}};
+			test.render = function(id, data, model, onto){
+				var $data = $(
+						$('#' + id).get(0) ||
+						$('.model').find(model).clone(true).attr('id', id).appendTo(onto)
+				);
+				Gun.obj.map(data, function(val, field){
+					if(Gun.obj.is(val)){ return }
+					$data.find('.' + field).val(val).text(val);
+				});
+				return $data;
+			}
+			var gun = Gun('http://localhost:8080/gun');
+			var gest = gun.get('distributed/test').set();
+			var gopt = gun.get('distributed/test/options').set();
+			var geers = gun.get('distributed/test/peers').set();
+			gopt.map(function(num, field){
+				$("#"+field).val(num);
+			});
+			test.render.peers = function(peer, id){
+				peer.id = id;
+				if(test.optcheck){
+					if(test.optcheck === peer.check){
+						peer.status = "has the correct test";
+					} else {
+						peer.status = "has the wrong test";
+					}
+				}
+				test.render(id, peer, '.peer', '#peers');
+			};
+			geers.map(test.render.peers);
+			
+			$("#close").click(function(){
+				Gun.obj.map(test.closepeers, function(win){ win.close() });
+			});
+			$("#start").click(function(){
+				$("#start").attr("disabled", true);
+				$("#test-status").text("Starting...");
+				test.opt = {};
+				Gun.obj.map(['tabs','stage','port','each','interval','length'], function(field){
+					test.opt[field] = parseFloat($("#" + field).val());
+				});
+				test.optcheck = Gun.text.ify(test.opt);
+				gopt.put(test.opt);
+				console.log("put opt!", test.opt);
+				test.peer = test.opt.tabs + 1;
+				
+				while(--test.peer){
+					var peer = {status: "initializing", id: 'peer' + test.peer};
+					(test.peers = test.peers || {})[peer.id] = peer;
+					test.render.peers(peer, peer.id);
+				}
+				test.peer = test.opt.tabs + 1; // reset to open tabs.
+				(function open(){
+					var peer = test.peers['peer' + (--test.peer)];
+					if(!peer){ return } // we're done
+					test.closepeers[peer.id] = window.open('./distributed.html#' + peer.id, peer.id);
+					setTimeout(open, test.opt.stage);
+				})()
+			});
+			
+			(function(){
+				if('peer' != location.hash.slice(1,5)){ return }
+				run(location.hash.slice(1));
+			}());
+			
+			function run(id){
+				var run = {};
+				gopt.val(function(opt){
+					delete opt._;
+					geers.path(id).put({check: Gun.text.ify(opt), status: 'starting'});
+					(function save(){
+						if(!run.left){ return }
+						var count = run.left--;
+						var random = Gun.text.random(opt.length);
+						gest.set({
+							peer: id,
+							msg: count,
+							rand: random
+						}, function(err, ok){
+							console.log("ACK:", err, ok, 'on', count);
+						});
+						setTimeout(save, opt.interval);
+					}(run.left = opt.each));
+				});
+			}
+		</script>
+	</body>
+</html>

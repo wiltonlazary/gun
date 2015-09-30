@@ -81,7 +81,6 @@ html, body {
 		display: none;
 	}
 }
-
 .screen {
 	position: relative;
 	overflow: hidden;
@@ -408,6 +407,7 @@ html, body {
 		color: #eee;
 		overflow: auto;
 	}
+	.tutorial a { color: skyblue; }
 	.center {
 		text-align: center;
 	}
@@ -593,13 +593,11 @@ ref.on(function(data){
 			}, tut = {};
 			$(".your-key").text(key);
 			hili();
-
 			location.hash = 'step1';
 			$(window).on('hashchange', function(){
 				$('.step').removeClass('show').addClass('hide')
 				$(location.hash.replace('#','.')).addClass('show');
 			});
-
 			$(".step1").find('button').on('click', function(e){
 				if(gun){ return }
 				gun = Gun('https://gunjs.herokuapp.com/gun');
@@ -623,8 +621,102 @@ ref.on(function(data){
 </div>
 <!-- END TUTORIAL -->
 
+<div id="quotes" style="margin: 0 auto; text-align: center;">
+<style>
+	#quotes iframe, #quotes blockquote, .twitter-tweet { 
+		display: inline-block !important;
+	}
+</style>
 
-<! OLD BLOG POST HERE -->
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">With the proliferation of simple apps that sometimes become huge, it&#39;s cool to see projects like GunDB happening. <a href="http://t.co/rgTuZ4LbLR">http://gunDB.io/</a></p>&mdash; Tom Preston-Werner (@mojombo) <a href="https://twitter.com/mojombo/status/571027932048723969">February 26, 2015</a></blockquote>
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">So a bunch of folks have asked what I make of <a href="http://t.co/vhpuGJYoIp">http://gunDB.io/</a> and the gist of it is that it assumes loosely synchronized clocks.</p>&mdash; Arf Installation (@aphyr) <a href="https://twitter.com/aphyr/status/646302398575587332">September 22, 2015</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<style>
+	#main {
+		min-width: 250px;
+		max-width: 700px;
+		width: 75%;
+		margin: 7% auto;
+		padding: 2% 5%;
+		background: white;
+		background: rgba(100%,100%,100%,.6);
+		font-family: Arial;
+		font-size: 18pt;
+		text-shadow: 0px 0px 7px #DDD;
+		line-height: 20pt;
+	}
+	#main p {
+		text-indent: 2em;
+	}
+</style>
+
+<div id="fields">
+	<style>
+		#fields ul { list-style-type: none; text-align: center; padding: 0; margin: 0; }
+		#fields li { 
+			width: 20%; min-width: 22em; display: inline-block; padding: 0; margin: 1%; 
+			vertical-align: top;
+		}
+		#fields img { height: 10em; clear: both; }
+		#fields .field { font-size: 200%; }
+		#fields p { text-align: left; text-align: justify; }
+		#fields .row {
+			display: inline-block; padding: 0; margin: 0;
+			min-width: 300px;
+		}
+	</style>
+	<ul>
+		<div class="row">
+		<li>
+			<img src="./web/img/graph.svg"><br>
+			<span class="field">Graph</span>
+			<p>Have it your way, key/value, document, relational, or graph.</p>
+		</li>
+		<li>
+			<img src="./web/img/bolt.svg"><br>
+			<span class="field">Realtime</span>
+			<p>Expect more from your database with less work.</p>
+		</li>
+		</div>
+		<div class="row">
+		<li>
+			<img src="./web/img/sync.svg"><br>
+			<span class="field">Decentralized</span>
+			<p>Synchronize and recover from failures, kiss Master-Slave goodbye.</p>
+		</li>
+		<li>
+			<img src="./web/img/dinosaur.svg"><br>
+			<span class="field">Offline-First</span>
+			<p>Keep chugging away even when the network cannot.</p>
+		</li>
+		</div>
+	</ul>
+</div>
+
+<div class="tutorial">
+
+	<div class="main">
+		<div id="videos" style="text-align: center;">
+			<style>#videos iframe { display: inline-block; margin: 1%; width: 250px; }</style>
+			
+			<iframe src="https://www.youtube.com/embed/-i-11T5ZI9o?rel=0" frameborder="0" allowfullscreen></iframe>
+			
+			<iframe src="https://www.youtube.com/embed/nG3yz1FsAxc?rel=0" frameborder="0" allowfullscreen></iframe>
+			
+			<iframe src="https://www.youtube.com/embed/cOO6wz1rZVY?rel=0" frameborder="0" allowfullscreen></iframe>
+		</div>
+		<p>
+			Check out our <a href="./events.html">Events</a> page for meetups! More useful links coming soon.
+			Please join the <a href="https://gitter.im/amark/gun">gitter</a> chatroom for discussion!
+		</p>
+	</div>
+</div>
+
+<!-- OLD BLOG POST HERE -->
 
 <style>
 	#main {
